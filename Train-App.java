@@ -1,29 +1,54 @@
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 
-public class TrainAppUC6 {
+// Step 1: Create Bogie class
+class Bogie {
+    String name;
+    int capacity;
+
+    // Constructor
+    Bogie(String name, int capacity) {
+        this.name = name;
+        this.capacity = capacity;
+    }
+
+    // For clean printing
+    @Override
+    public String toString() {
+        return name + " -> " + capacity;
+    }
+}
+
+public class TrainAppUC7 {
 
     public static void main(String[] args) {
 
-        // Step 1: Welcome message
-        System.out.println("=== Train Consist Management App (UC6) ===");
+        System.out.println("=== Train Consist Management App (UC7) ===");
 
-        // Step 2: Create HashMap for bogie -> capacity
-        Map<String, Integer> bogieCapacityMap = new HashMap<>();
+        // Step 2: Create list of bogies
+        List<Bogie> bogies = new ArrayList<>();
 
-        // Step 3: Insert bogie capacities
-        bogieCapacityMap.put("Sleeper", 72);
-        bogieCapacityMap.put("AC Chair", 60);
-        bogieCapacityMap.put("First Class", 24);
-        bogieCapacityMap.put("Cargo", 100); // optional goods example
+        // Step 3: Add bogies
+        bogies.add(new Bogie("Sleeper", 72));
+        bogies.add(new Bogie("AC Chair", 60));
+        bogies.add(new Bogie("First Class", 24));
 
-        // Step 4: Display all bogie capacities
-        System.out.println("Bogie Capacity Details:");
-        for (Map.Entry<String, Integer> entry : bogieCapacityMap.entrySet()) {
-            System.out.println(entry.getKey() + " -> " + entry.getValue());
+        // Step 4: Sort using Comparator (by capacity)
+        bogies.sort(Comparator.comparingInt(b -> b.capacity));
+
+        // Step 5: Display sorted bogies
+        System.out.println("Bogies sorted by capacity (ascending):");
+        for (Bogie b : bogies) {
+            System.out.println(b);
         }
 
-        // Step 5: Example lookup (important concept)
-        System.out.println("\nCapacity of Sleeper: " + bogieCapacityMap.get("Sleeper"));
+        // Optional: descending order
+        bogies.sort(Comparator.comparingInt((Bogie b) -> b.capacity).reversed());
+
+        System.out.println("\nBogies sorted by capacity (descending):");
+        for (Bogie b : bogies) {
+            System.out.println(b);
+        }
     }
 }
