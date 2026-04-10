@@ -1,5 +1,4 @@
 import java.util.*;
-import java.util.stream.Collectors;
 
 // Reuse same Bogie class
 class Bogie {
@@ -11,12 +10,12 @@ class Bogie {
         this.capacity = capacity;
     }
 
-    public String getType() {
-        return type;
-    }
-
     public int getCapacity() {
         return capacity;
+    }
+
+    public String getType() {
+        return type;
     }
 
     @Override
@@ -25,35 +24,30 @@ class Bogie {
     }
 }
 
-// UC9 Logic
+// UC10 Logic
 class BogieService {
 
-    // UC9 grouping method
-    public static Map<String, List<Bogie>> groupBogiesByType(List<Bogie> bogies) {
+    // UC10 method: total seats using map + reduce
+    public static int getTotalSeatCapacity(List<Bogie> bogies) {
         return bogies.stream()
-                .collect(Collectors.groupingBy(Bogie::getType));
+                .map(b -> b.getCapacity())        // extract capacity
+                .reduce(0, Integer::sum);         // aggregate
     }
 }
 
 // Main class
-public class UC9_Main {
+public class UC10_Main {
     public static void main(String[] args) {
 
         List<Bogie> bogieList = new ArrayList<>();
 
         bogieList.add(new Bogie("Sleeper", 72));
         bogieList.add(new Bogie("AC Chair", 60));
-        bogieList.add(new Bogie("Sleeper", 65));
         bogieList.add(new Bogie("First Class", 80));
-        bogieList.add(new Bogie("AC Chair", 55));
+        bogieList.add(new Bogie("Sleeper", 65));
 
-        Map<String, List<Bogie>> grouped =
-                BogieService.groupBogiesByType(bogieList);
+        int totalSeats = BogieService.getTotalSeatCapacity(bogieList);
 
-        System.out.println("Grouped Bogies:");
-        grouped.forEach((type, list) -> {
-            System.out.println("\nType: " + type);
-            list.forEach(System.out::println);
-        });
+        System.out.println("Total Seating Capacity: " + totalSeats);
     }
 }
