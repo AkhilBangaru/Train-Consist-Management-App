@@ -1,53 +1,39 @@
-import java.util.*;
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
 
-// Reuse same Bogie class
-class Bogie {
-    String type;
-    int capacity;
+// UC11 Logic
+class ValidationService {
 
-    public Bogie(String type, int capacity) {
-        this.type = type;
-        this.capacity = capacity;
+    // Regex patterns
+    private static final Pattern TRAIN_ID_PATTERN = Pattern.compile("TRN-\\d{4}");
+    private static final Pattern CARGO_CODE_PATTERN = Pattern.compile("PET-[A-Z]{2}");
+
+    // Validate Train ID
+    public static boolean isValidTrainId(String trainId) {
+        if (trainId == null) return false;
+        Matcher matcher = TRAIN_ID_PATTERN.matcher(trainId);
+        return matcher.matches();
     }
 
-    public int getCapacity() {
-        return capacity;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    @Override
-    public String toString() {
-        return type + " | Capacity: " + capacity;
-    }
-}
-
-// UC10 Logic
-class BogieService {
-
-    // UC10 method: total seats using map + reduce
-    public static int getTotalSeatCapacity(List<Bogie> bogies) {
-        return bogies.stream()
-                .map(b -> b.getCapacity())        // extract capacity
-                .reduce(0, Integer::sum);         // aggregate
+    // Validate Cargo Code
+    public static boolean isValidCargoCode(String cargoCode) {
+        if (cargoCode == null) return false;
+        Matcher matcher = CARGO_CODE_PATTERN.matcher(cargoCode);
+        return matcher.matches();
     }
 }
 
 // Main class
-public class UC10_Main {
+public class UC11_Main {
     public static void main(String[] args) {
 
-        List<Bogie> bogieList = new ArrayList<>();
+        String trainId = "TRN-1234";
+        String cargoCode = "PET-AB";
 
-        bogieList.add(new Bogie("Sleeper", 72));
-        bogieList.add(new Bogie("AC Chair", 60));
-        bogieList.add(new Bogie("First Class", 80));
-        bogieList.add(new Bogie("Sleeper", 65));
+        boolean isTrainValid = ValidationService.isValidTrainId(trainId);
+        boolean isCargoValid = ValidationService.isValidCargoCode(cargoCode);
 
-        int totalSeats = BogieService.getTotalSeatCapacity(bogieList);
-
-        System.out.println("Total Seating Capacity: " + totalSeats);
+        System.out.println("Train ID (" + trainId + ") valid: " + isTrainValid);
+        System.out.println("Cargo Code (" + cargoCode + ") valid: " + isCargoValid);
     }
 }
