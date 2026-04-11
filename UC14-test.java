@@ -1,53 +1,57 @@
 import org.junit.jupiter.api.Test;
-import java.util.*;
-
 import static org.junit.jupiter.api.Assertions.*;
 
-public class UC12_Test {
+public class UC14_Test {
 
     @Test
-    void testSafety_AllBogiesValid() {
-        List<GoodsBogie> list = List.of(
-                new GoodsBogie("Cylindrical", "Petroleum"),
-                new GoodsBogie("Open", "Coal")
-        );
-
-        assertTrue(SafetyService.isTrainSafe(list));
+    void testException_ValidCapacityCreation() {
+        assertDoesNotThrow(() -> {
+            PassengerBogie b = new PassengerBogie("Sleeper", 72);
+            assertEquals(72, b.getCapacity());
+        });
     }
 
     @Test
-    void testSafety_CylindricalWithInvalidCargo() {
-        List<GoodsBogie> list = List.of(
-                new GoodsBogie("Cylindrical", "Coal")
-        );
+    void testException_NegativeCapacityThrowsException() {
+        Exception exception = assertThrows(InvalidCapacityException.class, () -> {
+            new PassengerBogie("AC", -10);
+        });
 
-        assertFalse(SafetyService.isTrainSafe(list));
+        assertEquals("Capacity must be greater than zero", exception.getMessage());
     }
 
     @Test
-    void testSafety_NonCylindricalBogiesAllowed() {
-        List<GoodsBogie> list = List.of(
-                new GoodsBogie("Open", "Coal"),
-                new GoodsBogie("Box", "Grain")
-        );
+    void testException_ZeroCapacityThrowsException() {
+        Exception exception = assertThrows(InvalidCapacityException.class, () -> {
+            new PassengerBogie("AC", 0);
+        });
 
-        assertTrue(SafetyService.isTrainSafe(list));
+        assertEquals("Capacity must be greater than zero", exception.getMessage());
     }
 
     @Test
-    void testSafety_MixedBogiesWithViolation() {
-        List<GoodsBogie> list = List.of(
-                new GoodsBogie("Cylindrical", "Petroleum"),
-                new GoodsBogie("Cylindrical", "Coal") // invalid
-        );
+    void testException_ExceptionMessageValidation() {
+        Exception exception = assertThrows(InvalidCapacityException.class, () -> {
+            new PassengerBogie("Sleeper", -5);
+        });
 
-        assertFalse(SafetyService.isTrainSafe(list));
+        assertEquals("Capacity must be greater than zero", exception.getMessage());
     }
 
     @Test
-    void testSafety_EmptyBogieList() {
-        List<GoodsBogie> list = new ArrayList<>();
+    void testException_ObjectIntegrityAfterCreation() throws InvalidCapacityException {
+        PassengerBogie b = new PassengerBogie("First Class", 80);
 
-        assertTrue(SafetyService.isTrainSafe(list)); // no violations → safe
+        assertEquals("First Class", b.getType());
+        assertEquals(80, b.getCapacity());
+    }
+
+    @Test
+    void testException_MultipleValidBogiesCreation() {
+        assertDoesNotThrow(() -> {
+            new PassengerBogie("Sleeper", 70);
+            new PassengerBogie("AC", 60);
+            new PassengerBogie("First", 80);
+        });
     }
 }
